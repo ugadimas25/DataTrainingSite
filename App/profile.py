@@ -17,9 +17,25 @@ def app():
 
     # Create a cursor object to execute queries
     cursor = connection.cursor()
+    create_table_query = '''
+            CREATE TABLE IF NOT EXISTS spasial_data_training_site (
+            id_kelas_tutupan_lahan VARCHAR PRIMARY KEY NOT NULL,
+            id_users VARCHAR NOT NULL,
+            kelas_tutupan_lahan VARCHAR NOT NULL,
+            latitude FLOAT NOT NULL,
+            longitude FLOAT NOT NULL,
+            geom GEOMETRY NOT NULL,
+            location VARCHAR NOT NULL,
+            date DATE NOT NULL,
+            image_data BYTEA,
+            FOREIGN KEY (id_users) REFERENCES users(id)
+            );
+            '''
+    cursor.execute(create_table_query)
+    conn.commit()
    
     # Execute a query to retrieve the data
-    cursor.execute("SELECT id, latitude, longitude, image_data FROM location_images")
+    cursor.execute("SELECT latitude, longitude, location, date, image_data, FROM spasial_data_training_site")
 
     # Fetch all the rows returned by the query
     data = cursor.fetchall()
@@ -52,7 +68,7 @@ def app():
 
             # Update the image in the database using SQL UPDATE statement
             id_to_update = row[0]
-            cursor.execute("UPDATE location_images SET image_data = %s WHERE id = %s", (psycopg2.Binary(image_data), id_to_update))
+            cursor.execute("UPDATE spasial_data_training_site SET image_data = %s WHERE id = %s", (psycopg2.Binary(image_data), id_to_update))
             connection.commit()
 
             # Show a success message
