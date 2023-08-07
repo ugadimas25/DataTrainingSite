@@ -335,7 +335,7 @@ def app():
                     console.log(startDate)
                     console.log(endDate)
 
-                    fetch('http://localhost:3000/api/data', {{
+                    fetch('https://tiny-blue-salmon-fez.cyclic.app/api/data', {{
                     method: 'POST',
                     headers: {{
                         'Content-Type': 'application/json'
