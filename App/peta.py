@@ -48,18 +48,18 @@ def get_user_data_from_server(dataid):
         return None
 
 
-def run_query(query, params=None):
-    try:
-        connection = psycopg2.connect("your_connection_string_here")
-        cursor = connection.cursor()
-        cursor.execute(query, params)
-        result = cursor.fetchall()
-        cursor.close()
-        connection.close()
-        return result
-    except psycopg2.Error as e:
-        print("Error executing query:", e)
-        return None
+# def run_query(query, params=None):
+#     try:
+#         connection = psycopg2.connect("your_connection_string_here")
+#         cursor = connection.cursor()
+#         cursor.execute(query, params)
+#         result = cursor.fetchall()
+#         cursor.close()
+#         connection.close()
+#         return result
+#     except psycopg2.Error as e:
+#         print("Error executing query:", e)
+#         return None
 
 
 # To show the result of data view
@@ -74,10 +74,10 @@ def view_result():
     endDate = st.session_state.user_data_ewkb[2]
     # Establish a connection to the database
     connection = psycopg2.connect(
-        host="localhost",
-        database="WebGIS TA",
+        host="db.fesgpwzjkedykiwpmatt.supabase.co",
+        database="postgres",
         user="postgres",
-        password="admin",
+        password="17agustus2023",
         port='5432'
     )
 

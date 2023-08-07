@@ -47,10 +47,10 @@ province_indonesia ={
 
 def create_connection():
         connection = psycopg2.connect(
-            host="localhost",
-            database="WebGIS TA",
+            host="db.fesgpwzjkedykiwpmatt.supabase.co",
+            database="postgres",
             user="postgres",
-            password="admin",
+            password="17agustus2023",
             port='5432'
         )
         return connection
@@ -144,11 +144,34 @@ def register1():
     
     cellphone = st.text_input("Phone Number")
 
-    status = ("User") #("Admin")#
+    status = ("User") # ("Admin")# 
 
     if st.button("Register"):
             conn = create_connection()
             cursor = conn.cursor()
+             # Create a table to store the data
+            create_table_query = '''
+            CREATE TABLE IF NOT EXISTS users (
+                id VARCHAR PRIMARY KEY,
+                username VARCHAR(100) NOT NULL UNIQUE,
+                first_name VARCHAR(100) NOT NULL,
+                last_name VARCHAR(100) NOT NULL,
+                password VARCHAR(100) NOT NULL,
+                birthday DATE NOT NULL,
+                gender VARCHAR(10) NOT NULL,
+                email VARCHAR(100) NOT NULL UNIQUE,
+                country VARCHAR(50) NOT NULL,
+                province VARCHAR(50) NOT NULL,
+                city_regency VARCHAR(50) NOT NULL,
+                district VARCHAR(50) NOT NULL,
+                address TEXT NOT NULL,
+                cellphone VARCHAR(20) NOT NULL,
+                status VARCHAR(10) NOT NULL,
+                profile_picture BYTEA
+            );
+            '''
+            cursor.execute(create_table_query)
+            conn.commit()
             try:
                 # Check if the username already exists
                 cursor.execute("SELECT COUNT(*) FROM users WHERE username = %s", (username,))
@@ -163,30 +186,7 @@ def register1():
 
                     if count_email > 0:
                         st.error("Error: The email is already in use. Please choose a different email.")
-                    else:
-                        # Create a table to store the data
-                        create_table_query = '''
-                        CREATE TABLE IF NOT EXISTS users (
-                            id VARCHAR PRIMARY KEY,
-                            username VARCHAR(100) NOT NULL UNIQUE,
-                            first_name VARCHAR(100) NOT NULL,
-                            last_name VARCHAR(100) NOT NULL,
-                            password VARCHAR(100) NOT NULL,
-                            birthday DATE NOT NULL,
-                            gender VARCHAR(10) NOT NULL,
-                            email VARCHAR(100) NOT NULL UNIQUE,
-                            country VARCHAR(50) NOT NULL,
-                            province VARCHAR(50) NOT NULL,
-                            city_regency VARCHAR(50) NOT NULL,
-                            district VARCHAR(50) NOT NULL,
-                            address TEXT NOT NULL,
-                            cellphone VARCHAR(20) NOT NULL,
-                            status VARCHAR(10) NOT NULL
-                        );
-                        '''
-                        cursor.execute(create_table_query)
-                        conn.commit()
-                    
+                    else:                    
                         if insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status) == True:
                             st.success("Registered successfully. Please login.")
                             print (insert_user)

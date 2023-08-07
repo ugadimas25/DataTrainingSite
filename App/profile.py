@@ -8,11 +8,11 @@ def app():
 
     # Connect to the PostgreSQL database
     connection = psycopg2.connect(
-        user='postgres',
-        password='admin',
-        host='localhost',
-        port='5432',
-        database='Testing'
+        host="db.fesgpwzjkedykiwpmatt.supabase.co",
+        database="postgres",
+        user="postgres",
+        password="17agustus2023",
+        port='5432'
     )
 
     # Create a cursor object to execute queries

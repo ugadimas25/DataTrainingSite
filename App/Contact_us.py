@@ -25,7 +25,7 @@ def app():
         msg['From'] = email
         msg['To'] = sender_email
         msg['Subject'] = "Contact Form Submission"
-        msg.attach(MIMEText(message, 'plain'))
+        msg.attach(MIMEText(name, email, message, 'plain'))
         
         # Connect to the SMTP server and send the email
         try:

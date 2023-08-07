@@ -38,11 +38,10 @@ id_user = get_id_generate()
 
 # main app
 def app():
-    if (session_state.login is not None) and (session_state.session_data is not None) and (session_state.status_user == "Admin"):
+    if (session_state.login is not None) and (session_state.session_data is not None) and (session_state.session_data['user_id_login'] == "Admin"):
         menuafterloginadmin()
         print (session_state.login)
         print (session_state.session_data)
-        print (session_state.status_user)
         print (id_user.user_id)
         print (id_user.user_data_ewkb)
     
@@ -50,7 +49,7 @@ def app():
         menuafterloginuser()
         print (session_state.login)
         print (session_state.session_data)
-        print (session_state.status_user)
+    
     else:
         menubeforelogin()
         print (session_state.login)

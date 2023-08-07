@@ -35,10 +35,10 @@ def generate_id(kelas_tutupan_lahan):
 
 def create_connection():
         connection = psycopg2.connect(
-            host="localhost",
-            database="WebGIS TA",
+            host="db.fesgpwzjkedykiwpmatt.supabase.co",
+            database="postgres",
             user="postgres",
-            password="admin",
+            password="17agustus2023",
             port='5432'
         )
         return connection

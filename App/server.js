@@ -7,9 +7,9 @@ const port = 3000;
 
 const pool = new Pool({
     user: 'postgres',
-    host: 'localhost',
-    database: 'WebGIS TA',
-    password: 'admin',
+    host: 'db.fesgpwzjkedykiwpmatt.supabase.co',
+    database: 'postgres',
+    password: '17agustus2023',
     port: 5432,
 });
 
