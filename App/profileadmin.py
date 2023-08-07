@@ -56,7 +56,7 @@ def app():
 
                 # Update the image in the database using SQL UPDATE statement
                 id_to_update = row[0]
-                cursor.execute("UPDATE spasial_input_user SET image_data = %s WHERE id = %s", (psycopg2.Binary(image_data), id_to_update))
+                cursor.execute("UPDATE spasial_input_user SET image_data = %s WHERE id_kelas_tutupan_lahan = %s", (psycopg2.Binary(image_data), id_to_update))
                 connection.commit()
 
                 # Show a success message
