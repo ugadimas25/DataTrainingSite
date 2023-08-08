@@ -15,7 +15,7 @@ def get_user_data_from_server(dataid):
         
 
     # API endpoint URL for getting user_data_ewkb
-    api_url = "https://serverdatatrainingsitepython.streamlit.app/get_user_data"
+    api_url = "http://http://139.180.222.100:5002/get_user_data"
 
     # Prepare the request data
     data = {"user_id": str(dataid)}
@@ -296,7 +296,7 @@ def app():
                     console.log(data.startDate)
                     console.log(data.endDate)
 
-                    fetch("https://serverdatatrainingsitepython.streamlit.app/process_data", {{
+                    fetch("http://139.180.222.100:5002/process_data", {{
                         method: 'POST',
                         headers: {{
                         'Content-Type': 'application/json'
@@ -335,7 +335,7 @@ def app():
                     console.log(startDate)
                     console.log(endDate)
 
-                    fetch('https://tiny-blue-salmon-fez.cyclic.app/api/data', {{
+                    fetch('http://139.180.222.100:3000/api/data', {{
                     method: 'POST',
                     headers: {{
                         'Content-Type': 'application/json'
