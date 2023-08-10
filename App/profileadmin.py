@@ -3,6 +3,7 @@ import psycopg2
 from PIL import Image
 import io
 import base64
+from App.login import get_session_state
 
 def create_connection():
         connection = psycopg2.connect(
@@ -16,6 +17,30 @@ def create_connection():
 
 def app():
     st.title("Profile Admin")
+    session_state = get_session_state()
+
+    with st.container():
+        conn = create_connection()
+        cursor = conn.cursor()
+        query = "SELECT profile_picture FROM users WHERE id = %s;"
+        cursor.execute(query, (session_state.session_data['user_id_login'],))
+        check_image_profile = cursor.fetchall()
+
+        
+        new_image = st.file_uploader(f"Update Profile Picture", type=["png", "jpg"])
+
+        if new_image is not None:
+            # Read the image data
+            # Allow the user to upload a new image
+            image_data = new_image.read()
+
+            # Update the image in the database using SQL UPDATE statement
+           
+            cursor.execute("UPDATE users SET profile_picture = %s WHERE  id = %s", (psycopg2.Binary(image_data), session_state.session_data['user_id_login'],))
+            conn.commit()
+
+            # Show a success message
+            st.success("Image updated successfully!")
      
     with st.container():
         # Create a cursor object to execute queries
@@ -70,7 +95,7 @@ def app():
 
     with st.container():
         st.write("---")
-        st.header("Data need to verivy")
+        st.header("Data need to verify below")
         st.write("---")
         # Create a cursor object to execute queries
         conn = create_connection()

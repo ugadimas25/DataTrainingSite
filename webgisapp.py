@@ -13,6 +13,7 @@ from App.Generateiduser import get_id_generate
 # import your app modules here
 
 
+
 App = [
     {"func": home.app, "title": "Home", "icon": "house"},
     {"func": peta.app, "title": "Map", "icon": "map"},
@@ -121,6 +122,8 @@ def menuafterloginuser():
         #sidebar menu login 
         st.sidebar.write(f"Welcome, user {session_state.session_data['username']}!")
         profile_circle()
+
+            
 
         if st.sidebar.button("Logout"):
             logout_user()

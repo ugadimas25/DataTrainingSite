@@ -5,8 +5,10 @@ from psycopg2 import Error
 from App.login import get_session_state
 
 
-def get_image_from_database(image_id):
+def get_image_from_database():
     try:
+        
+        session_state = get_session_state()
         # Connect to the PostgreSQL database
         connection = psycopg2.connect(
             host="db.fesgpwzjkedykiwpmatt.supabase.co",
@@ -20,11 +22,12 @@ def get_image_from_database(image_id):
         cursor = connection.cursor()
 
         # Execute a SELECT query
-        query = "SELECT image_url FROM images WHERE id = %s;"
-        cursor.execute(query, (image_id,))
+        query = "SELECT profile_picture FROM users WHERE id = %s;"
+        cursor.execute(query, session_state.session_data['user_id_login'])
 
         # Fetch the result
-        image_url = cursor.fetchone()[0]
+        image_url = cursor.fetchone()
+        print(image_url )
 
         # Close the cursor and connection
         cursor.close()
@@ -80,30 +83,16 @@ def circle_profile_picture(image_path, container_size=200):
 def profile_circle():
 
     
-    session_state = get_session_state()
     
      # Retrieve the image data from the database (replace with your logic)
-    profile_picture_data = get_image_from_database(session_state.session_data['user_id_login'] )
-
+    profile_picture_data = get_image_from_database( )
+    
     # Display the circular profile picture using the retrieved data
     if profile_picture_data:
         circle_profile_picture(profile_picture_data, container_size=150)
     else:
         st.sidebar.write("No profile picture available.")
-        new_image = st.file_uploader(f"Update Image for ID {row[0]}", type=["png", "jpg"])
-
-        if new_image is not None:
-            # Read the image data
-            # Allow the user to upload a new image
-            image_data = new_image.read()
-
-            # Update the image in the database using SQL UPDATE statement
-            id_to_update = row[0]
-            cursor.execute("UPDATE users SET image_data = %s WHERE  id = %s", (psycopg2.Binary(image_data), session_state.session_data['user_id_login']))
-            conn.commit()
-
-            # Show a success message
-            st.success("Image updated successfully!")
+       
 
     # Your other Streamlit content goes here
     st.sidebar.write("Welcome to my app!")

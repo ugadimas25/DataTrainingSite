@@ -1,0 +1,151 @@
+sudo apt update
+sudo apt install nginx
+
+# Instal Node.js (versi terbaru) dan npm
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+sudo apt install npm
+
+# Instal PM2 secara global
+sudo npm install -g pm2
+
+sudo apt install certbot python3-certbot-nginx
+
+
+sudo apt install postgresql postgresql-contrib
+
+
+sudo mkdir -p /var/www/server2.trainingsite.online/html 
+
+sudo chown -R $USER:$USER /var/www/server2.trainingsite.online/html 
+
+sudo chmod -R 755 /var/www/server2.trainingsite.online
+
+sudo nano /var/www/server2.trainingsite.online/html/index.html
+
+
+<html>
+    <head>
+        <title>Welcome to server2.trainingsite.online!</title>
+    </head>
+    <body>
+        <h1>Success!  The server2.trainingsite.online server block is working!</h1>
+    </body>
+</html>
+
+
+
+sudo nano /etc/nginx/sites-available/server2.trainingsite.online
+
+
+server {
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/server2.trainingsite.online/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name server2.trainingsite.online www.server2.trainingsite.online;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+
+
+sudo ln -s /etc/nginx/sites-available/server2.trainingsite.online /etc/nginx/sites-enabled/
+
+sudo nano /etc/nginx/nginx.conf
+
+Find the server_names_hash_bucket_size directive and remove the # symbol to uncomment the line. If you are using nano, you can quickly search for words in the file by pressing CTRL and w.
+
+
+sudo nginx -t
+
+
+sudo systemctl restart nginx
+
+
+sudo apt install certbot python3-certbot-nginx
+
+
+sudo nano /etc/nginx/sites-available/server2.trainingsite.online
+
+
+...
+server_name server.trainingsite.online www.server.trainingsite.online;
+...
+
+
+sudo nginx -t
+
+sudo systemctl reload nginx
+
+
+sudo ufw status
+
+sudo ufw enable
+
+sudo ufw allow 'Nginx Full'
+sudo ufw delete allow 'Nginx HTTP'
+
+sudo ufw status
+
+sudo certbot --nginx -d server2.trainingsite.online -d www.server2.trainingsite.online
+
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for nodejs.trainingsite.online and www.nodejs.trainingsite.online
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/nodejs.trainingsite.online/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/nodejs.trainingsite.online/privkey.pem
+This certificate expires on 2023-11-07.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for nodejs.trainingsite.online to /etc/nginx/sites-enabled/nodejs.trainingsite.online
+Successfully deployed certificate for www.nodejs.trainingsite.online to /etc/nginx/sites-enabled/nodejs.trainingsite.online
+Congratulations! You have successfully enabled HTTPS on https://nodejs.trainingsite.online and https://www.nodejs.trainingsite.online
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/python.trainingsite.online/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/python.trainingsite.online/privkey.pem
+This certificate expires on 2023-11-07.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+
+sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+
+
+
+sudo systemctl status certbot.timer
+
+
+sudo certbot renew --dry-run
+
+sudo nano /etc/nginx/sites-available/nodejs.conf
+
+
+sudo nano /etc/nginx/sites-available/python.conf
+
+sudo ln -s /etc/nginx/sites-available/nodejs.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/python.conf /etc/nginx/sites-enabled/
+
+sudo nginx -t
+
+sudo systemctl reload nginx
+
+
+
