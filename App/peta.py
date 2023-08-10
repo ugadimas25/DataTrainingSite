@@ -203,10 +203,10 @@ def app():
     <body>
 
         <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" name="startDate" onchange="applyFilter()">
+        <input type="date" id="startDate" name="startDate" onchange="'applyFilter()','sendDataToPython()','filterData()'">
 
         <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate" onchange="applyFilter()">
+        <input type="date" id="endDate" name="endDate" onchange="'applyFilter()','sendDataToPython()','filterData()'">
 
 
 
@@ -236,7 +236,6 @@ def app():
             function applyFilter() {{
                 var startDate = document.getElementById("startDate").value;
                 var endDate = document.getElementById("endDate").value;
-                filterData(startDate, endDate);
             }}
 
 
@@ -309,9 +308,9 @@ def app():
                         console.log(data); // If the Python server sends a response back
 
                         // Save the data in a hidden element in the DOM
-                        var hiddenElement = document.getElementById('response-data');
-                        hiddenElement.value = JSON.stringify(data);
-                        hiddenElement.dispatchEvent(new Event('change'));
+                        // var hiddenElement = document.getElementById('response-data');
+                        // hiddenElement.value = JSON.stringify(data);
+                        // hiddenElement.dispatchEvent(new Event('change'));
 
                         // Now you can use the result for further processing or send it to Python for division.
                         // For simplicity, I'll show how to pass the result to Python.
