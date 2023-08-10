@@ -16,37 +16,37 @@ sudo apt install certbot python3-certbot-nginx
 sudo apt install postgresql postgresql-contrib
 
 
-sudo mkdir -p /var/www/server2.trainingsite.online/html 
+sudo mkdir -p /var/www/server.trainingsite.online/html 
 
-sudo chown -R $USER:$USER /var/www/server2.trainingsite.online/html 
+sudo chown -R $USER:$USER /var/www/server.trainingsite.online/html 
 
-sudo chmod -R 755 /var/www/server2.trainingsite.online
+sudo chmod -R 755 /var/www/server.trainingsite.online
 
-sudo nano /var/www/server2.trainingsite.online/html/index.html
+sudo nano /var/www/server.trainingsite.online/html/index.html
 
 
 <html>
     <head>
-        <title>Welcome to server2.trainingsite.online!</title>
+        <title>Welcome to server.trainingsite.online!</title>
     </head>
     <body>
-        <h1>Success!  The server2.trainingsite.online server block is working!</h1>
+        <h1>Success!  The server.trainingsite.online server block is working!</h1>
     </body>
 </html>
 
 
 
-sudo nano /etc/nginx/sites-available/server2.trainingsite.online
+sudo nano /etc/nginx/sites-available/server.trainingsite.online
 
 
 server {
         listen 80;
         listen [::]:80;
 
-        root /var/www/server2.trainingsite.online/html;
+        root /var/www/server.trainingsite.online/html;
         index index.html index.htm index.nginx-debian.html;
 
-        server_name server2.trainingsite.online www.server2.trainingsite.online;
+        server_name server.trainingsite.online www.server.trainingsite.online;
 
         location / {
                 try_files $uri $uri/ =404;
@@ -54,7 +54,7 @@ server {
 }
 
 
-sudo ln -s /etc/nginx/sites-available/server2.trainingsite.online /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/server.trainingsite.online /etc/nginx/sites-enabled/
 
 sudo nano /etc/nginx/nginx.conf
 
@@ -70,7 +70,7 @@ sudo systemctl restart nginx
 sudo apt install certbot python3-certbot-nginx
 
 
-sudo nano /etc/nginx/sites-available/server2.trainingsite.online
+sudo nano /etc/nginx/sites-available/server.trainingsite.online
 
 
 ...
@@ -92,7 +92,7 @@ sudo ufw delete allow 'Nginx HTTP'
 
 sudo ufw status
 
-sudo certbot --nginx -d server2.trainingsite.online -d www.server2.trainingsite.online
+sudo certbot --nginx -d server.trainingsite.online -d www.server.trainingsite.online
 
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Requesting a certificate for nodejs.trainingsite.online and www.nodejs.trainingsite.online
@@ -147,5 +147,17 @@ sudo nginx -t
 
 sudo systemctl reload nginx
 
+pm2 start server2.py --interpreter python3
 
 
+sudo apt install python3 python3-pip
+
+pip3 install flask
+
+python3 -m flask --version
+
+pip3 install flask-cors
+
+pip3 install shapely
+
+pip3 install -r requirements.txt

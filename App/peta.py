@@ -15,7 +15,7 @@ def get_user_data_from_server(dataid):
         
 
     # API endpoint URL for getting user_data_ewkb
-    api_url = "http://16.170.233.193:5002/get_user_data"
+    api_url = "http://server2.trainingsite.online/get_user_data"
 
     # Prepare the request data
     data = {"user_id": str(dataid)}
@@ -296,7 +296,7 @@ def app():
                     console.log(data.startDate)
                     console.log(data.endDate)
 
-                    fetch("http://16.170.233.193:5002/process_data", {{
+                    fetch("http://server2.trainingsite.online/process_data", {{
                         method: 'POST',
                         headers: {{
                         'Content-Type': 'application/json'
@@ -335,7 +335,7 @@ def app():
                     console.log(startDate)
                     console.log(endDate)
 
-                    fetch('http://16.170.233.193:3000/api/data', {{
+                    fetch('http://server.trainingsite.online/api/data', {{
                     method: 'POST',
                     headers: {{
                         'Content-Type': 'application/json'
