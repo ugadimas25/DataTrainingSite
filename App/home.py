@@ -7,7 +7,10 @@ import base64
 
 
 def app():
-    st.title("Home")
+    
+    show_title = False  # Change this value based on your condition
+    if show_title:
+        st.title("Home")
 
     st.title("Welcome To Training Site Data Repository!!!")
     st.markdown(

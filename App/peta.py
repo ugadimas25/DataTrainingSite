@@ -109,12 +109,16 @@ def view_result():
     for row in results:
         col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
         with col1:
+            st.markdown("**Latitude:**")
             st.write("Latitude:", row[3])
         with col2:
+            st.markdown("**Longitude:**")
             st.write("Longitude:", row[4])
         with col3:
-            st.write("Geom:", row[5])
+            st.markdown("**Location:**")
+            st.write("Location:", row[6])
         with col4:
+            st.markdown("**Image:**")
             # Check for null or empty image value
             if row[8] is not None and len(row[8]) > 0:
                 # Convert bytea to PIL Image
@@ -154,8 +158,8 @@ def view_result():
 
 #Display map
 def app():
-
-    st.title("map")
+    
+    st.title("Map")
 
     # Initialize session_state and id_user
     session_state = get_session_state()
