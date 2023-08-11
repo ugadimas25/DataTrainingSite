@@ -8,7 +8,8 @@ import json
 from App.Generateiduser import get_id_generate, id_call_generator
 import psycopg2
 import pandas as pd
-
+import io 
+from PIL import Image 
 #Get draw polygon format ewkb from python server
 def get_user_data_from_server(dataid):
  
@@ -87,63 +88,63 @@ def view_result():
     # Create a cursor to execute SQL queries
     cursor = connection.cursor()
 
-    # # Perform the spatial query
-    # sql_query = """
-    #     SELECT *
-    #     FROM spasial_data_training_site
-    #     WHERE ST_Intersects(geom, ST_SetSRID(%s::geometry, 4326))
-    # """
-    # # Execute the spatial query by passing ewkb_binary_data as a parameter
-    # cursor.execute(sql_query, [psycopg2.Binary(ewkb_binary_data)])
-
-
-
-    # # Fetch the results
-    # results = cursor.fetchall()
-
-    # # Print the results (you can process them as needed)
-    # print(results)
-
-    #     # Display the data in Streamlit
-    # for row in results:
-    #     col1, col2, col3 = st.columns([1, 1, 1])
-    #     with col1:
-    #         st.write("Latitude:", row[0])
-    #     with col2:
-    #         st.write("Longitude:", row[1])
-    #     with col3:
-    #         st.write("Geom:", row[2])
-    #     # with col4:
-    #     #     # Check for null or empty image value
-    #     #     if row[3] is not None and len(row[3]) > 0:
-    #     #         # Convert bytea to PIL Image
-    #     #         image_bytes = io.BytesIO(row[3])
-    #     #         image = Image.open(image_bytes)
-    #     #         st.image(image, use_column_width=True)
-    #     #     else:
-    #     #         st.write("No image available")
-
-
-    
-    # Show tabel
     # Perform the spatial query
-    query_2 = """
+    sql_query = """
         SELECT *
         FROM spasial_data_training_site
         WHERE ST_Intersects(geom, ST_SetSRID(%s::geometry, 4326))
     """
-    cursor.execute(query_2, [psycopg2.Binary(ewkb_binary_data)])
-    rows = cursor.fetchall()
+    # Execute the spatial query by passing ewkb_binary_data as a parameter
+    cursor.execute(sql_query, [psycopg2.Binary(ewkb_binary_data)])
 
 
-    data=pd.DataFrame(rows)
-    data.columns= ['id_kelas_tutupan_lahan', 'id_users', 'kelas_tutupan_lahan', 'latitude', 'longitude', 'geom', 'location', 'date', 'image_data']
-    # Selecting only the desired columns for display
-    selected_columns =  ['kelas_tutupan_lahan', 'latitude', 'longitude', 'date', 'image_data']
-    data_selected = data[selected_columns]
 
-    # Display the selected columns in the Streamlit table
-    st.table(data_selected)
+    # Fetch the results
+    results = cursor.fetchall()
+
+    # Print the results (you can process them as needed)
+    print(results)
+
+        # Display the data in Streamlit
+    for row in results:
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+        with col1:
+            st.write("Latitude:", row[3])
+        with col2:
+            st.write("Longitude:", row[4])
+        with col3:
+            st.write("Geom:", row[5])
+        with col4:
+            # Check for null or empty image value
+            if row[8] is not None and len(row[8]) > 0:
+                # Convert bytea to PIL Image
+                image_bytes = io.BytesIO(row[8])
+                image = Image.open(image_bytes)
+                st.image(image, use_column_width=True)
+            else:
+                st.write("No image available")
+
+
+    
+    # # Show tabel
+    # # Perform the spatial query
+    # query_2 = """
+    #     SELECT *
+    #     FROM spasial_data_training_site
+    #     WHERE ST_Intersects(geom, ST_SetSRID(%s::geometry, 4326))
+    # """
+    # cursor.execute(query_2, [psycopg2.Binary(ewkb_binary_data)])
+    # rows = cursor.fetchall()
+
+
+    # data=pd.DataFrame(rows)
+    # data.columns= ['id_kelas_tutupan_lahan', 'id_users', 'kelas_tutupan_lahan', 'latitude', 'longitude', 'geom', 'location', 'date', 'image_data']
+    # # Selecting only the desired columns for display
+    # selected_columns =  ['kelas_tutupan_lahan', 'latitude', 'longitude', 'date', 'image_data']
+    # data_selected = data[selected_columns]
+
+    # # Display the selected columns in the Streamlit table
+    # st.table(data_selected)
            
     # Close the cursor and connection
     cursor.close()
