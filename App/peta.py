@@ -12,8 +12,6 @@ import pandas as pd
 #Get draw polygon format ewkb from python server
 def get_user_data_from_server(dataid):
  
-        
-
     # API endpoint URL for getting user_data_ewkb
     api_url = "https://server2.trainingsite.online/get_user_data"
 
@@ -74,10 +72,15 @@ def view_result():
     endDate = st.session_state.user_data_ewkb[2]
     # Establish a connection to the database
     connection = psycopg2.connect(
-        host="db.fesgpwzjkedykiwpmatt.supabase.co",
+        # host="db.fesgpwzjkedykiwpmatt.supabase.co",
+        # database="postgres",
+        # user="postgres",
+        # password="17agustus2023",
+        # port='5432'
+        host="170.64.133.197",
         database="postgres",
         user="postgres",
-        password="17agustus2023",
+        password="admin",
         port='5432'
     )
 
@@ -142,15 +145,6 @@ def view_result():
     # Display the selected columns in the Streamlit table
     st.table(data_selected)
            
-
-
-
-
-
-
-
-
-
     # Close the cursor and connection
     cursor.close()
     connection.close()

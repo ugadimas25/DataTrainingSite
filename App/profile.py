@@ -8,15 +8,22 @@ def app():
 
     # Connect to the PostgreSQL database
     connection = psycopg2.connect(
-        host="db.fesgpwzjkedykiwpmatt.supabase.co",
+        # host="db.fesgpwzjkedykiwpmatt.supabase.co",
+        # database="postgres",
+        # user="postgres",
+        # password="17agustus2023",
+        # port='5432'
+        host="170.64.133.197",
         database="postgres",
         user="postgres",
-        password="17agustus2023",
+        password="admin",
         port='5432'
     )
 
     # Create a cursor object to execute queries
+    
     cursor = connection.cursor()
+
     create_table_query = '''
             CREATE TABLE IF NOT EXISTS spasial_data_training_site (
             id_kelas_tutupan_lahan VARCHAR PRIMARY KEY NOT NULL,
@@ -32,7 +39,7 @@ def app():
             );
             '''
     cursor.execute(create_table_query)
-    conn.commit()
+    connection.commit()
    
     # Execute a query to retrieve the data
     cursor.execute("SELECT latitude, longitude, location, date, image_data, FROM spasial_data_training_site")

@@ -35,10 +35,16 @@ def generate_id(kelas_tutupan_lahan):
 
 def create_connection():
         connection = psycopg2.connect(
-            host="db.fesgpwzjkedykiwpmatt.supabase.co",
+            # host="db.fesgpwzjkedykiwpmatt.supabase.co",
+            # database="postgres",
+            # user="postgres",
+            # password="17agustus2023",
+            # port='5432',
+
+            host="170.64.133.197",
             database="postgres",
             user="postgres",
-            password="17agustus2023",
+            password="admin",
             port='5432'
         )
         return connection
