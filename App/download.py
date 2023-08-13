@@ -10,7 +10,6 @@ from shapely.wkb import loads
 import tempfile
 import os
 from shapely import wkb
-import pyxlsb 
 import geopandas as gpd
 import zipfile
 import os
@@ -63,13 +62,15 @@ def Download_Excel():
     df = pd.DataFrame(results)  # Convert the results to a DataFrame
 
     excel_buffer = BytesIO()
-    with pd.ExcelWriter(excel_buffer, engine='pyxlsb') as writer:  # Use pyxlsb as the engine
+    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
         df.to_excel(writer, index=False, sheet_name='Sheet1')
 
     excel_buffer.seek(0)
     b64 = base64.b64encode(excel_buffer.read()).decode()
     href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="data.xlsx">Download Excel file</a>'
     st.markdown(href, unsafe_allow_html=True)
+
+
 
 def Download_CSV():
     ewkb_hex_data = st.session_state.user_data_ewkb[0]

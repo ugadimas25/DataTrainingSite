@@ -8,7 +8,6 @@ pandas==2.0.1
 Pillow<10.0.0
 psycopg2-binary==2.9.6
 pyotp==2.8.0
-pyxlsb==1.0.10
 Requests==2.31.0
 Shapely==2.0.1
 streamlit==1.25.0
