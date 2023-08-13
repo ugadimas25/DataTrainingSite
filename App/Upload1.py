@@ -5,6 +5,7 @@ from datetime import datetime
 import geocoder
 from App.login import get_session_state
 import uuid
+import re
 
 
 kelas_tutupan_lahan_options ={
@@ -211,9 +212,7 @@ def import_excel_to_postgres(excel_file):
         
         insert_kelas_tutupan_lahan_exel(id_users, kelas_tutupan_lahan, latitude, longitude, geom, selected_date, locationgeoAPI)
         
-       
-       
-
+   
 
     cursor.close()
     conn.close()
@@ -223,7 +222,7 @@ def import_excel_to_postgres(excel_file):
 
 # Streamlit app
 def Excel():
-    st.title('Import Excel to PostgreSQL')
+    st.header('Import Excel to PostgreSQL')
 
     # File uploader for Excel file
     excel_file = st.file_uploader('Upload Excel File', type=['xlsx'])
@@ -240,7 +239,22 @@ def Excel():
 
 # Main Program
 def app():
-    st.title("upload")
+    with open('App/style.css') as f:
+        css_styles = f.read()
+    
+        # Define the selector you want to extract styles for
+        selector = 'h1'
+
+        # Use regular expression to extract styles for the specific selector
+        pattern = rf"{selector}[^{selector}]*{{[^}}]*}}"
+        matches = re.findall(pattern, css_styles)
+
+        # Combine the extracted matches into a single string
+        extracted_styles = "\n".join(matches)
+
+        st.markdown(f'<style>{extracted_styles}</style>',unsafe_allow_html=True)
+
+    st.title("Upload")
     
     # Create a selectbox with some options
     selected_option = st.selectbox('Select an option', ['Manual', 'Excel', 'Option 3'])

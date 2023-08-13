@@ -4,6 +4,8 @@ import pyotp
 import random
 import string
 from PIL import Image
+import re
+
 
 # session management function to store the authenticated user's information:
 def create_session(user):
@@ -52,6 +54,23 @@ def create_connection():
         return connection
 
 def login1():
+
+        with open('App/style.css') as f:
+                css_styles = f.read()
+                
+            
+                # Define the selector you want to extract styles for
+                selector = 'h1'
+
+                # Use regular expression to extract styles for the specific selector
+                pattern = rf"{selector}[^{selector}]*{{[^}}]*}}"
+                matches = re.findall(pattern, css_styles)
+
+                # Combine the extracted matches into a single string
+                extracted_styles = "\n".join(matches)
+
+                st.markdown(f'<style>{extracted_styles}</style>',unsafe_allow_html=True)
+
         st.title("Login")
         
         username = st.text_input("Username", key="username_input_log")

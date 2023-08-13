@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from App import home, login, peta, register, profile, Upload1, Contact_us, imageprofile, profileadmin
+from App import home, login, peta, register, profile, Upload1, Contact_us, imageprofile, profileadmin, download
 from App.login import login1
 from App.register import register1
 from App.login import get_session_state

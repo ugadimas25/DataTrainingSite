@@ -6,6 +6,9 @@ import string
 from PIL import Image
 import datetime
 import uuid
+import re
+import logging
+
 
 
 
@@ -61,6 +64,23 @@ def create_connection():
         return connection
 
 def register1():
+
+    with open('App/style.css') as f:
+        css_styles = f.read()
+        
+    
+        # Define the selector you want to extract styles for
+        selector = 'h1'
+
+        # Use regular expression to extract styles for the specific selector
+        pattern = rf"{selector}[^{selector}]*{{[^}}]*}}"
+        matches = re.findall(pattern, css_styles)
+
+        # Combine the extracted matches into a single string
+        extracted_styles = "\n".join(matches)
+
+        st.markdown(f'<style>{extracted_styles}</style>',unsafe_allow_html=True)
+
     st.title("Register")
 
     # Function to generate an id based on username and UUID
@@ -174,32 +194,58 @@ def register1():
             '''
             cursor.execute(create_table_query)
             conn.commit()
-            try:
-                # Check if the username already exists
-                cursor.execute("SELECT COUNT(*) FROM users WHERE username = %s", (username,))
-                count_username = cursor.fetchone()[0]
 
-                if count_username > 0:
-                    st.error("Error: The username is already in use. Please choose a different username.")
-                else:
-                    # Check if the email already exists
-                    cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
-                    count_email = cursor.fetchone()[0]
+            if username.strip() == "":
+                st.error("Error: Please provide a username.")
+            elif first_name.strip() == "":
+                st.error("Error: Please provide your first name.")
+            elif last_name.strip() == "":
+                st.error("Error: Please provide your last name.")
+            elif password.strip() == "":
+                st.error("Error: Please provide a password.")
+            elif birthday is None:
+                st.error("Error: Please provide your birthday.")
+            elif email.strip() == "":
+                st.error("Error: Please provide an email.")
+            elif country.strip() == "" or country.strip() == "Other":
+                st.error("Error: Please select a country.")
+            elif province.strip() == "" or province.strip() == "Other":
+                st.error("Error: Please provide a province.")
+            elif city_regency.strip() == "":
+                st.error("Error: Please provide a city/regency.")
+            elif district.strip() == "" or district.strip() == "Other":
+                st.error("Error: Please provide a district.")
+            elif address.strip() == "":
+                st.error("Error: Please provide an address.")
+            elif cellphone.strip() == "":
+                st.error("Error: Please provide a phone number.")
+            else:
+                try:
+                    # Check if the username already exists
+                    cursor.execute("SELECT COUNT(*) FROM users WHERE username = %s", (username,))
+                    count_username = cursor.fetchone()[0]
 
-                    if count_email > 0:
-                        st.error("Error: The email is already in use. Please choose a different email.")
-                    else:                    
-                        if insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status) == True:
-                            st.success("Registered successfully. Please login.")
-                            print (insert_user)
-                        else:
-                            st.error("Error occurred during registration. Please try again.")
-                            print (insert_user)
-            except Exception as e:
-                 st.error("Error checking username and email:", e)
-            finally:
-                cursor.close()
-                conn.close()
+                    if count_username > 0:
+                        st.error("Error: The username is already in use. Please choose a different username.")
+                    else:
+                        # Check if the email already exists
+                        cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
+                        count_email = cursor.fetchone()[0]
+
+                        if count_email > 0:
+                            st.error("Error: The email is already in use. Please choose a different email.")
+                        else:                    
+                            if insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status) == True:
+                                st.success("Registered successfully. Please login.")
+                                print (insert_user)
+                            else:
+                                st.error("Error occurred during registration. Please try again.")
+                                print (insert_user)
+                except Exception as e:
+                    st.error("Error checking username and email:", e)
+                finally:
+                    cursor.close()
+                    conn.close()
 
 
 

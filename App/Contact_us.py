@@ -2,8 +2,28 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import streamlit as st
+import re
 
 def app():
+
+    with open('App/style.css') as f:
+        css_styles = f.read()
+        
+    
+        # Define the selector you want to extract styles for
+        selector = 'h1'
+        
+
+        # Use regular expression to extract styles for the specific selector
+        pattern = rf"{selector}[^{selector}]*{{[^}}]*}}"
+        matches = re.findall(pattern, css_styles)
+
+        # Combine the extracted matches into a single string
+        extracted_styles = "\n".join(matches)
+
+        st.markdown(f'<style>{extracted_styles}</style>',unsafe_allow_html=True)
+
+
     st.title("Contact Us")
     
     sender_email = 'rosasinemo@gmail.com'  # Specify the sender email address here

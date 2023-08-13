@@ -4,6 +4,7 @@ from streamlit_lottie import st_lottie
 import numpy as np
 from PIL import Image
 import base64
+import re
 
 
 def app():
@@ -11,6 +12,22 @@ def app():
     show_title = False  # Change this value based on your condition
     if show_title:
         st.title("Home")
+    with open('App/style.css') as f:
+        css_styles = f.read()
+        
+    
+        # Define the selector you want to extract styles for
+        selector = 'h1'
+
+        # Use regular expression to extract styles for the specific selector
+        pattern = rf"{selector}[^{selector}]*{{[^}}]*}}"
+        matches = re.findall(pattern, css_styles)
+
+        # Combine the extracted matches into a single string
+        extracted_styles = "\n".join(matches)
+
+        st.markdown(f'<style>{extracted_styles}</style>',unsafe_allow_html=True)
+            
 
     st.title("Welcome To Training Site Data Repository!!!")
     st.markdown(
@@ -39,7 +56,7 @@ def app():
         left_column1, right_column1 = st.columns(2)
         with left_column1:
             st.subheader("Hi, I am Fakhry :wave")
-            st.title("A Surveyor and trader cocoa product From Indonesia")
+            st.header("A Surveyor and trader cocoa product From Indonesia")
             st.write("I am passionate to learn something new and become more productive")
             st.write("[My Project](https://mashaecocoa.com/)")
         

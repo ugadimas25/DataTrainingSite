@@ -48,7 +48,9 @@ def app():
             st.success("Image updated successfully!")
      
     with st.container():
+        st.write("---")
         # Create a cursor object to execute queries
+        st.header("Data that needs validation from admin")
         conn = create_connection()
         cursor = conn.cursor()
     
@@ -100,8 +102,8 @@ def app():
 
     with st.container():
         st.write("---")
-        st.header("Data need to verify below")
-        st.write("---")
+        st.header("Data need to validate below")
+        
         # Create a cursor object to execute queries
         conn = create_connection()
         cursor = conn.cursor()

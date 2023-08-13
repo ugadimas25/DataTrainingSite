@@ -1,0 +1,63 @@
+host all all 0.0.0/0 md5
+host all all ::0/0   md5
+
+host all all 202.80.217.5/32 md5
+check postgres
+
+systemctl status postgresql
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Sat 2023-08-12 08:07:34 UTC; 13s ago
+    Process: 81901 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 81901 (code=exited, status=0/SUCCESS)
+        CPU: 1ms
+
+Aug 12 08:07:34 ubuntu-s-1vcpu-1gb-syd1-01 systemd[1]: Starting PostgreSQL RDBMS...
+Aug 12 08:07:34 ubuntu-s-1vcpu-1gb-syd1-01 systemd[1]: Finished PostgreSQL RDBMS.
+
+sudo nano /etc/postgresql/15/main/postgresql.conf
+
+sudo nano /etc/postgresql/15/main/pg_hba.conf
+
+sudo systemctl restart postgresql
+
+ss -nlt | grep 5432
+
+
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+host    postgres        postgres        202.80.217.5/32         md5
+
+
+sudo -u postgres psql
+
+\l
+
+
+
+sudo systemctl restart postgresql
+
+crontab -e
+
+Select an editor.  To change later, run 'select-editor'.
+  1. /bin/nano        <---- easiest
+  2. /usr/bin/vim.basic
+  3. /usr/bin/vim.tiny
+  4. /bin/ed
+
+
+0 */3 * * * systemctl restart postgresql
+
+*/2 * * * * cd /root/Server Python && pm2 start server2.py --interpreter python3
+
+pm2 start server2.py --interpreter python3 --cron "0 * * * *"
+
+
+pip install XlsxWriter
+
+pm2 flush
+
+
+
+
+
