@@ -10,7 +10,7 @@ from shapely.wkb import loads
 import tempfile
 import os
 from shapely import wkb
-import xlsxwriter
+import pyxlsb 
 import geopandas as gpd
 import zipfile
 import os
@@ -63,7 +63,7 @@ def Download_Excel():
     df = pd.DataFrame(results)  # Convert the results to a DataFrame
 
     excel_buffer = BytesIO()
-    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
+    with pd.ExcelWriter(excel_buffer, engine='pyxlsb') as writer:  # Use pyxlsb as the engine
         df.to_excel(writer, index=False, sheet_name='Sheet1')
 
     excel_buffer.seek(0)
