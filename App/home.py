@@ -30,14 +30,7 @@ def app():
             
 
     st.title("Welcome To Training Site Data Repository!!!")
-    st.markdown(
-        """
-    A [streamlit](https://streamlit.io) app template for geospatial applications based on [streamlit-option-menu](https://github.com/victoryhb/streamlit-option-menu). 
-    To create a direct link to a pre-selected menu, add `?page=<app name>` to the URL, e.g., `?page=upload`.
-    https://share.streamlit.io/giswqs/streamlit-template?page=upload
-
-    """
-    )
+    
     #Find more emoji here: https://www.webfx.com/tools/emoji-cheat-sheet/
     # st.set_page_config(page_title="My Webpage", page_icon=":tada", layout="wide")
    
@@ -55,10 +48,10 @@ def app():
     with st.container():
         left_column1, right_column1 = st.columns(2)
         with left_column1:
-            st.subheader("Hi, I am Fakhry :wave")
-            st.header("A Surveyor and trader cocoa product From Indonesia")
-            st.write("I am passionate to learn something new and become more productive")
-            st.write("[My Project](https://mashaecocoa.com/)")
+            st.write("##")
+            st.write("##")
+            st.header("Kumpulkan data training site dan berkolaborasi dalam penyediaan data training site")
+            
         
         with right_column1:
 
@@ -84,18 +77,17 @@ def app():
         st.write("---")
         left_column2, right_column2 = st.columns(2)
         with left_column2:
-            st.header("What I do")
+            st.subheader("Atribut apa saja yang tersedia dan diperlukan?")
             st.write("##")
             st.write(
                 """
-                On my social media I am advertising for product:
-                - Food and Beverage
-                - House
-                - Animal
-                - Gadget
+                - Kelas tutupan lahan
+                - Koordinat (Latitude, Longitude)
+                - Tanggal pengambilan
+                - Foto lokasi data dengan foto GPS
                 """
             )
-            st.write("[Social Media (IG) >](https://www.instagram.com/mashaecocoa/)")
+            st.subheader("Ingat login telebih dahulu untuk upload data anda!!!")
         with right_column2:
             st_lottie(lottie_coding, height=300, key="coding")
 
@@ -105,7 +97,6 @@ def app():
         st.write("---")
         left_column3, right_column3 = st.columns(2)
         with left_column3:
-            st.title("Embedding YouTube Video in Streamlit")
 
             # YouTube video URL
             youtube_url = 'https://www.youtube.com/watch?v=YOUR_VIDEO_ID_HERE'
@@ -113,7 +104,8 @@ def app():
             # Display the video
             st.video(youtube_url)
         with right_column3:
-            st.write("This Video Explain more about this website")
+            st.header("Tutorial Penggunaan WebGIS Repository Data Training Site")
+            st.write("This Video Explain more about this website...")
            
 
     # container tutorial penggunaan web PDF
