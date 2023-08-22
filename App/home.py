@@ -116,7 +116,7 @@ def app():
     with st.container():
         # Add a section for Excel file download
         st.markdown("## Download Excel File For Upload Data Format Excel")
-        file_path_excel = "https://github.com/Fakhrynm/DataTrainingSite/blob/main/App/Tabel%20Input%20Data.xlsx"  # Replace with the actual path to your Excel file
+        file_path_excel = "https://docs.google.com/spreadsheets/d/1ZVNVDVGywNuRhEk85uec4Ouufb0NaYFJ/edit?usp=sharing&ouid=105887453054310419357&rtpof=true&sd=true"  # Replace with the actual path to your Excel file
         download_link = f'<a href="{file_path_excel}" download>Click here to download Excel file</a>'
         st.markdown(download_link, unsafe_allow_html=True)
 
