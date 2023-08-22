@@ -123,5 +123,12 @@ def app():
         file_path = "https://github.com/Fakhrynm/DataTrainingSite/blob/main/App/Panduan_Penggunaan_WebGIS.pdf"  # Replace "hww" with the actual file path to your PDF file
         displayPDF(file_path)
 
+    with st.container():
+        # Add a section for Excel file download
+        st.markdown("## Download Excel File For Upload Data Format Excel")
+        file_path_excel = "https://example.com/path/to/your/excel/file.xlsx"  # Replace with the actual path to your Excel file
+        download_link = f'<a href="{file_path_excel}" download>Click here to download Excel file</a>'
+        st.markdown(download_link, unsafe_allow_html=True)
+
                     
 
