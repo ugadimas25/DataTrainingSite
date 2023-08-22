@@ -120,7 +120,7 @@ def app():
             st.markdown(pdf_display, unsafe_allow_html=True)
 
         # Example usage with "hww" as the file path:
-        file_path = "App/Panduan_Penggunaan_WebGIS.pdf"  # Replace "hww" with the actual file path to your PDF file
+        file_path = "https://github.com/Fakhrynm/DataTrainingSite/blob/main/App/Panduan_Penggunaan_WebGIS.pdf"  # Replace "hww" with the actual file path to your PDF file
         displayPDF(file_path)
 
                     
