@@ -108,25 +108,15 @@ def app():
 
     # container tutorial penggunaan web PDF
     with st.container():
-        def displayPDF(file):
-        # Opening file from file path
-            with open(file, "rb") as f:
-                base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<iframe src="https://drive.google.com/file/d/1WNah9QOlIqUzm7IQZYqx13n7CRzfyeBi/preview" width="640" height="480"></iframe>'
+        st.markdown(pdf_display, unsafe_allow_html=True)
 
-            # Embedding PDF in HTML
-            pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-
-            # Displaying File
-            st.markdown(pdf_display, unsafe_allow_html=True)
-
-        # Example usage with "hww" as the file path:
-        file_path = "https://github.com/Fakhrynm/DataTrainingSite/blob/main/App/Panduan_Penggunaan_WebGIS.pdf"  # Replace "hww" with the actual file path to your PDF file
-        displayPDF(file_path)
+      
 
     with st.container():
         # Add a section for Excel file download
         st.markdown("## Download Excel File For Upload Data Format Excel")
-        file_path_excel = "https://example.com/path/to/your/excel/file.xlsx"  # Replace with the actual path to your Excel file
+        file_path_excel = "https://github.com/Fakhrynm/DataTrainingSite/blob/main/App/Tabel%20Input%20Data.xlsx"  # Replace with the actual path to your Excel file
         download_link = f'<a href="{file_path_excel}" download>Click here to download Excel file</a>'
         st.markdown(download_link, unsafe_allow_html=True)
 
