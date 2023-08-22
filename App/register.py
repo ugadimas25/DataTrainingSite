@@ -29,8 +29,16 @@ country_flags = {
 district_semarang_city= {
     "Other":"",
     "Tembalang": "Tembalang",
-    "Bulusan":"Bulusan",
-    "Meteseh":"Meteseh"
+    "Genuk":"Genuk",
+    "Candisari":"Candisari"
+} 
+
+#Ditionary of sub district
+sub_district_tembalang= {
+    "Other":"",
+    "Tembalang": "Tembalang",
+    "Meteseh":"Meteseh",
+    "Bulusan":"Bulusan"
 } 
 
 #Ditionary of city_regency
@@ -63,6 +71,11 @@ def create_connection():
         )
         return connection
 
+def is_valid_email(email):
+    # Regular expression pattern for email validation
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email)
+
 def register1():
 
     with open('App/style.css') as f:
@@ -89,7 +102,7 @@ def register1():
         return f"{username}_{user_uuid}"
 
     # Function to insert a new user into the "users" table
-    def insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status):
+    def insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, subdistrict, address, cellphone, status):
         conn = create_connection()
         cursor = conn.cursor()
         print("runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
@@ -98,9 +111,9 @@ def register1():
             user_id = generate_id(username)
 
             # Insert the new user into the "users" table
-            cursor.execute("INSERT INTO users (id, username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status) "
-                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (user_id, username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status))
+            cursor.execute("INSERT INTO users (id, username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, subdistrict, address, cellphone, status) "
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (user_id, username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, subdistrict, address, cellphone, status))
 
             conn.commit() 
             return True# Return True if the insertion is successful
@@ -121,6 +134,7 @@ def register1():
     gender = st.selectbox("Gender", ["Other", "Male", "Female"])
     email = st.text_input("Email")
 
+    
     # Create a list of country names with their flag emojis for the selectbox
     country_names_with_flags = [f"{country_flags[country]} {country}" for country in country_flags.keys()]
     country = st.selectbox("Country", country_names_with_flags)  # Use a selectbox for countries
@@ -156,17 +170,28 @@ def register1():
         district = st.text_input ("District")
     else:
         district = st.text_input ("District")
-    
-    if  district == "Other":
+
+    if district == "Tembalang":
+       subdistrict = st.selectbox ("Sub District",sub_district_tembalang)
+    elif  district == "Other":
         custom_district = st.text_input("District (Custom)", "")
         if custom_district.strip() != "":
-            district = custom_city_regency.strip() 
+            district = custom_district.strip() 
+        subdistrict = st.text_input ("Sub District")
+    else:
+        subdistrict = st.text_input ("Sub District")
+    
+    if  subdistrict == "Other":
+        custom_subdistrict = st.text_input("Sub District (Custom)", "")
+        if custom_subdistrict.strip() != "":
+            subdistrict = custom_subdistrict.strip() 
+    
 
     address = st.text_area("Address")
     
     cellphone = st.text_input("Phone Number")
 
-    status = ("User") # ("Admin")# 
+    status =  ("User") # ("Admin")# 
 
     if st.button("Register"):
             conn = create_connection()
@@ -186,6 +211,7 @@ def register1():
                 province VARCHAR(50) NOT NULL,
                 city_regency VARCHAR(50) NOT NULL,
                 district VARCHAR(50) NOT NULL,
+                subdistrict VARCHAR(50) NOT NULL,
                 address TEXT NOT NULL,
                 cellphone VARCHAR(20) NOT NULL,
                 status VARCHAR(10) NOT NULL,
@@ -207,6 +233,9 @@ def register1():
                 st.error("Error: Please provide your birthday.")
             elif email.strip() == "":
                 st.error("Error: Please provide an email.")
+            elif not is_valid_email(email):
+                st.error("Error: Invalid email format.")
+                return
             elif country.strip() == "" or country.strip() == "Other":
                 st.error("Error: Please select a country.")
             elif province.strip() == "" or province.strip() == "Other":
@@ -215,6 +244,8 @@ def register1():
                 st.error("Error: Please provide a city/regency.")
             elif district.strip() == "" or district.strip() == "Other":
                 st.error("Error: Please provide a district.")
+            elif subdistrict.strip() == "" or subdistrict.strip() == "Other":
+                st.error("Error: Please provide a sub district.")
             elif address.strip() == "":
                 st.error("Error: Please provide an address.")
             elif cellphone.strip() == "":
@@ -235,7 +266,7 @@ def register1():
                         if count_email > 0:
                             st.error("Error: The email is already in use. Please choose a different email.")
                         else:                    
-                            if insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status) == True:
+                            if insert_user(username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, subdistrict, address, cellphone, status) == True:
                                 st.success("Registered successfully. Please login.")
                                 print (insert_user)
                             else:
@@ -246,79 +277,6 @@ def register1():
                 finally:
                     cursor.close()
                     conn.close()
+            cursor.close()
+            conn.close()
 
-
-
-# CREATE TABLE users (
-#     id SERIAL PRIMARY KEY,
-#     username VARCHAR(100) NOT NULL UNIQUE,
-#     password VARCHAR(100) NOT NULL,
-#     birthday DATE,
-#     gender VARCHAR(10),
-#     email VARCHAR(100) NOT NULL UNIQUE,
-#     country VARCHAR(50),
-#     province VARCHAR(50),
-#     city_regency VARCHAR(50),
-#     district VARCHAR(50),
-#     address TEXT,
-#     cellphone VARCHAR(20),
-#     status VARCHAR(10)
-# );
-
-#   # Create a table to store the data
-#     create_table_query = '''
-#     CREATE TABLE IF NOT EXISTS location_images (
-#         id SERIAL PRIMARY KEY,
-#         latitude FLOAT,
-#         longitude FLOAT,
-#         image_data BYTEA
-#     );
-#     '''
-#     cursor.execute(create_table_query)
-
-# import psycopg2
-# import uuid
-
-# # Create a connection to the PostgreSQL database
-# def create_connection():
-#     connection = psycopg2.connect(
-#         host="localhost",
-#         database="your_database",
-#         user="your_username",
-#         password="your_password"
-#     )
-#     return connection
-
-# # Function to generate an id based on username and UUID
-# def generate_id(username):
-#     user_uuid = str(uuid.uuid4()).replace("-", "")
-#     return f"{username}_{user_uuid}"
-
-# # Function to insert a new user into the "users" table
-# def insert_user(username, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status):
-#     conn = create_connection()
-#     cursor = conn.cursor()
-
-#     try:
-#         # Generate the id based on username and UUID
-#         user_id = generate_id(username)
-
-#         # Insert the new user into the "users" table
-#         cursor.execute("INSERT INTO users (id, username, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status) "
-#                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-#                        (user_id, username, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status))
-
-#         conn.commit()
-#         return user_id
-#     except Exception as e:
-#         print("Error inserting user:", e)
-#     finally:
-#         cursor.close()
-#         conn.close()
-
-# # Example usage to insert a new user
-# username = "john_doe"
-# password = "mysecretpassword"
-# # ... (other user details)
-# user_id = insert_user(username, password, birthday, gender, email, country, province, city_regency, district, address, cellphone, status)
-# print(f"User ID for {username}: {user_id}")

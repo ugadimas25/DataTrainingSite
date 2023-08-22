@@ -226,7 +226,7 @@ def app():
                 // Initialize map with leaflet library
                 function initialize() {{
                     // Initialize the map
-                    var map = L.map('map').setView([28.2096, 83.9856], 13);
+                    var map = L.map('map').setView([ -6.966667, 110.416664], 13);
 
                     // Add the OpenStreetMap tiles
                     var osm = L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{

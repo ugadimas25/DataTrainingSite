@@ -15,7 +15,6 @@ def app():
     with open('App/style.css') as f:
         css_styles = f.read()
         
-    
         # Define the selector you want to extract styles for
         selector = 'h1'
 
@@ -34,7 +33,6 @@ def app():
     #Find more emoji here: https://www.webfx.com/tools/emoji-cheat-sheet/
     # st.set_page_config(page_title="My Webpage", page_icon=":tada", layout="wide")
    
-
     def load_lottieurl(url):
         r =requests.get(url)
         if r.status_code !=200:
@@ -122,7 +120,7 @@ def app():
             st.markdown(pdf_display, unsafe_allow_html=True)
 
         # Example usage with "hww" as the file path:
-        file_path = "App/Dsign Repository.pdf"  # Replace "hww" with the actual file path to your PDF file
+        file_path = "App/Panduan_Penggunaan_WebGIS.pdf"  # Replace "hww" with the actual file path to your PDF file
         displayPDF(file_path)
 
                     

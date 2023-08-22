@@ -13,7 +13,7 @@ def create_session(user):
            'user_id_login': user[0],
            'username': user[1],
            'password': user[2],
-           'status_user': user[14]
+           'status_user': user[15]
            # Add any other relevant user information to the session
        }
        return session_data
@@ -24,8 +24,7 @@ if 'session_data' not in session_state:
     session_state.session_data = None
 if 'login' not in session_state:
     session_state.login = False
-# if 'status_user' not in session_state:
-#     session_state.status_user = 'Admin'
+
 
 def get_session_state():
     session_state = st.session_state
@@ -33,10 +32,8 @@ def get_session_state():
         session_state.session_data = None
     if 'login' not in session_state:
         session_state.login = False
-    # if 'status_user' not in session_state:
-    #     session_state.status_user = 'Admin'
-    return session_state
 
+    return session_state
 
 def create_connection():
         connection = psycopg2.connect(
@@ -92,6 +89,8 @@ def login1():
                     print (session_state.session_data)
                 else:
                     st.error("Invalid username or password")
+                cursor.close()
+                conn.close()
 
 def logout_user():
     # Clear the user session or perform any other necessary tasks

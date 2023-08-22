@@ -32,6 +32,9 @@ host    postgres        postgres        202.80.217.5/32         md5
 sudo -u postgres psql
 
 \l
+sudo systemctl stop postgresql
+
+sudo systemctl start postgresql
 
 
 

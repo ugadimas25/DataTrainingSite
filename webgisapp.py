@@ -1,18 +1,14 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
+from PIL import Image, ImageDraw
 from App import home, login, peta, register, profile, Upload1, Contact_us, imageprofile, profileadmin, download
 from App.login import login1
 from App.register import register1
 from App.login import get_session_state
 from App.login import logout_user
-from PIL import Image, ImageDraw
 from App.imageprofile import profile_circle 
 from App.Generateiduser import get_id_generate
-
-
 # import your app modules here
-
-
 
 App = [
     {"func": home.app, "title": "Home", "icon": "house"},
@@ -70,19 +66,14 @@ def menubeforelogin():
                 menu_title= None, #required
                 options=["Home", "Map", "Contact Us","Login or Register"], #required
                 icons=["house", "map", "envelope"], #optional
-                # options=["Home", "Map", "Contact", "Login", "Sign Up"], #required
-                # icons=["house", "map", "envelope", "person-circle", "person"], #optional
-                # menu_icon="cast", #optional
                 default_index=0, #optional
                 orientation="horizontal",
             )
-
 
             for app in App:
                 if app["title"] == selected:
                     app["func"]()
                     break
-
 
     if show_sidebar:
         #sidebar menu login 
@@ -111,25 +102,20 @@ def menuafterloginuser():
                 orientation="horizontal",
             )
 
-
             for app in App:
                 if app["title"] == selected:
                     app["func"]()
                     break
-
 
     if show_sidebar:
         #sidebar menu login 
         st.sidebar.write(f"Welcome, user {session_state.session_data['username']}!")
         profile_circle()
 
-            
-
         if st.sidebar.button("Logout"):
             logout_user()
         if session_state.login == False:
             st.experimental_rerun()  # Rerun the app when the script is executed again
-
 
 # Menu After login Admin
 def menuafterloginadmin():
@@ -146,12 +132,10 @@ def menuafterloginadmin():
                 orientation="horizontal",
             )
 
-
             for app in App:
                 if app["title"] == selected:
                     app["func"]()
                     break
-
 
     if show_sidebar:
         #sidebar menu login 

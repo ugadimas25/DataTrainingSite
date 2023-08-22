@@ -17,8 +17,6 @@ from zipfile import ZipFile
 import shutil
 
 
-
-
 def create_connection():
         connection = psycopg2.connect(
             # host="db.fesgpwzjkedykiwpmatt.supabase.co",

@@ -1,7 +1,6 @@
 import uuid  # Import the uuid module to generate UUIDs
 import streamlit as st
 
-
 if 'user_id' not in st.session_state:
     st.session_state.user_id = None
 if 'user_data_ewkb' not in st.session_state:
@@ -16,7 +15,6 @@ def id_call_generator():
 
     print("Mau Pulannnnnnnnnnnnnnnnnnnnng")
     print(st.session_state.user_id)
-
 
 # get id for acces
 def get_id_generate():
