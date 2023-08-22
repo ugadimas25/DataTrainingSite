@@ -97,7 +97,7 @@ def app():
         with left_column3:
 
             # YouTube video URL
-            youtube_url = 'https://www.youtube.com/watch?v=YOUR_VIDEO_ID_HERE'
+            youtube_url = 'https://www.youtube.com/watch?v=p5Cpbuq3r84'
 
             # Display the video
             st.video(youtube_url)

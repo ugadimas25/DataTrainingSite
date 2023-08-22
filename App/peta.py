@@ -331,12 +331,16 @@ def app():
                             
                             console.log(data)
                             data.forEach(function (point) {{
+                                var popupContent =  "<b>Kelas:</b> " + point.kelas_tutupan_lahan +
+                                                    "<br><b>Latitude:</b> " + point.latitude +
+                                                    "<br><b>Longitude:</b> " + point.longitude +
+                                                    "<br><b>Lokasi:</b> " + point.location ;
                                 var ewkb = point.geom; // Assuming the EWKB data is provided as "geom" property in the data object
                                 console.log(ewkb)
                                 var geometry = ewkbToGeometry(ewkb); // Call the function to convert EWKB to Leaflet geometry
 
                                 var marker = L.marker(geometry.getLatLng()).addTo(drawnFeatures);
-                                marker.bindPopup(point.name);
+                                marker.bindPopup(popupContent);
                             }});
                         }})
                         .catch((error) => {{
