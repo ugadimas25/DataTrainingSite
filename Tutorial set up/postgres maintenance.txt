@@ -58,7 +58,9 @@ pm2 start server2.py --interpreter python3 --cron "0 * * * *"
 
 pip install XlsxWriter
 
-pm2 flush
+pm2 flush --cron "*/15 * * * *"
+
+pm2 cron "*/15 * * * *" pm2 flush
 
 sudo -u postgres psql
 postgres=# SELECT pg_reload_conf();

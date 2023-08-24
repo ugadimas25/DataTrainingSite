@@ -244,6 +244,7 @@ def app():
                             remove: true
                         }},
                         draw: {{
+                            marker: false,
                             polygon: false,
                             polyline: false,
                             rectangle: true,
