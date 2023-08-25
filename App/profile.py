@@ -76,7 +76,7 @@ def app():
 
            
         # Create a selectbox with some options
-        selected_option = st.selectbox('Select an option', ['No', 'Update Profile'])
+        selected_option = st.selectbox('Select an option for update yor profile', ['No', 'Update Profile'])
 
         if selected_option == 'Update Profile':  
         
