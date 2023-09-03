@@ -387,6 +387,7 @@ def app():
 
                 cursor.execute("DELETE FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s", (row[0],))
                 conn.commit()
+                st.experimental_rerun()  # Rerun the app 
 
             col6.write(f"Admin Note: {row[9]}")
             
