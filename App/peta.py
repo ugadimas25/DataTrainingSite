@@ -106,10 +106,11 @@ def view_result():
             st.markdown("**Image:**")
             # Check for null or empty image value
             if row[8] is not None and len(row[8]) > 0:
-                # Convert bytea to PIL Image
-                image_bytes = io.BytesIO(row[8])
-                image = Image.open(image_bytes)
-                st.image(image, use_column_width=True)
+                # URL gambar
+                url_gambar = row[8]
+
+                # Menampilkan gambar
+                st.image(url_gambar, caption= row[2], use_column_width=True)
             else:
                 st.write("No image available")
         st.write('---')
