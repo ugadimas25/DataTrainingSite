@@ -186,7 +186,7 @@ def app():
 
                 if st.button("Update Foto Training Site"):
                     # Example usage
-                    # Update the image in the database using SQL UPDATE statement
+                    # Select the image in the database using SQL SELECT statement
                     id_to_update = row[0]
                     conn = create_connection()
                     cursor = conn.cursor()
@@ -256,6 +256,26 @@ def app():
             with col6:
                 # Delete button
                 if st.button(f"Delete ID {row[0]} upload"):
+                    # Select the image in the database using SQL SELECT statement
+                    id_to_update = row[0]
+                    conn = create_connection()
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT image_data FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s", (id_to_update,))
+                    name_delete = cursor.fetchone()
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+
+                    if name_delete is not None:
+                        space_name = 'tugasakhir'
+                        space_file_name_to_delete = name_delete[0]  # Nama file yang ingin dihapus
+                        parsed_url = urlparse(space_file_name_to_delete)
+                        file_name = os.path.basename(parsed_url.path)
+                        print(file_name)
+                        
+                        # Memanggil fungsi untuk menghapus file dari DigitalOcean Spaces
+                        delete_from_digitalocean_space_dts(space_name, file_name)
+
                     # Delete the data from the database using SQL DELETE statement
                     delete_query = "DELETE FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s;"
                     cursor.execute(delete_query, (row[0],))
@@ -370,6 +390,26 @@ def app():
             col6.write(f"Admin Note: {row[9]}")
             
             if st.button(f"Delete ID {row[0]}"):
+                    # Select the image in the database using SQL SELECT statement
+                    id_to_update = row[0]
+                    conn = create_connection()
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT image_data FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s", (id_to_update,))
+                    name_delete = cursor.fetchone()
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+
+                    if name_delete is not None:
+                        space_name = 'tugasakhir'
+                        space_file_name_to_delete = name_delete[0]  # Nama file yang ingin dihapus
+                        parsed_url = urlparse(space_file_name_to_delete)
+                        file_name = os.path.basename(parsed_url.path)
+                        print(file_name)
+                        
+                        # Memanggil fungsi untuk menghapus file dari DigitalOcean Spaces
+                        delete_from_digitalocean_space_dts(space_name, file_name)
+
                     # Delete the data from the database using SQL DELETE statement
                     delete_query = "DELETE FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s;"
                     cursor.execute(delete_query, (row[0],))
