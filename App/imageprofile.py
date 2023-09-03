@@ -10,7 +10,7 @@ def get_image_url_from_database():
         session_state = get_session_state()
         # Connect to the PostgreSQL database
         connection = psycopg2.connect(
-            host="localhost",
+            host="170.64.133.197", #"localhost",
             database="postgres",
             user="postgres",
             password="admin",

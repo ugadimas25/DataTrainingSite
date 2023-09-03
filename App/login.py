@@ -37,7 +37,7 @@ def get_session_state():
 
 def create_connection():
         connection = psycopg2.connect(
-           host="localhost",
+           host="170.64.133.197", #"localhost",
             database="postgres",
             user="postgres",
             password="admin",

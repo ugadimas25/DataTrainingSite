@@ -64,7 +64,7 @@ def view_result():
     
     # Establish a connection to the database
     connection = psycopg2.connect(
-        host="localhost",
+        host="170.64.133.197", #"localhost",
         database="postgres",
         user="postgres",
         password="admin",
