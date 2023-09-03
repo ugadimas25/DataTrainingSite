@@ -184,7 +184,7 @@ def app():
             if new_image is not None:
                 image_extension = new_image.name.split(".")[-1].lower()  # Extract the last part of the name after the dot
 
-                if st.button("Update Foto Training Site"):
+                if st.button(f"Update Foto Training Site {row[0]}"):
                     # Example usage
                     # Select the image in the database using SQL SELECT statement
                     id_to_update = row[0]
@@ -225,7 +225,8 @@ def app():
                         conn.close()
 
                         # Show a success message
-                        st.success("Profile picture updated successfully!") 
+                        st.success("Profile picture updated successfully!")
+                    st.experimental_rerun()  # Rerun the app  
                
 
 
