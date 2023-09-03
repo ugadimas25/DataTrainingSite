@@ -64,12 +64,7 @@ def view_result():
     
     # Establish a connection to the database
     connection = psycopg2.connect(
-        # host="db.fesgpwzjkedykiwpmatt.supabase.co",
-        # database="postgres",
-        # user="postgres",
-        # password="17agustus2023",
-        # port='5432'
-        host="170.64.133.197",
+        host="localhost",
         database="postgres",
         user="postgres",
         password="admin",
@@ -187,10 +182,10 @@ def app():
         <body>
 
             <label for="startDate"  style="background-color: white; padding: 5px 5px; border-radius: 5px;">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" onchange=" 'applyFilter()', 'sendDataToPython()', 'filterData()'" >
+            <input type="date" id="startDate" name="startDate" onchange=" applyFilter()" >
 
             <label for="endDate"style="background-color: white; padding: 5px 5px; border-radius: 5px;">End Date:</label>
-            <input type="date" id="endDate" name="endDate" onchange=" 'applyFilter()', 'sendDataToPython()', 'filterData()'" >
+            <input type="date" id="endDate" name="endDate" onchange=" applyFilter()" >
 
 
 
@@ -216,14 +211,14 @@ def app():
             <script>console.log('Your unique user ID is: {user_id_for_save}');</script>
 
             <script>
-                // Function to handle date inputs onchange event
+                // Function to handle date inputs onchange event , 'sendDataToPython()', 'filterData()'
                 function applyFilter() {{
                     var startDate = document.getElementById("startDate").value;
                     var endDate = document.getElementById("endDate").value;
                 }}
 
 
-                // Initialize map with leaflet library
+                // Initialize map with leaflet library , 'sendDataToPython()', 'filterData()'
                 function initialize() {{
                     // Initialize the map
                     var map = L.map('map').setView([ -6.966667, 110.416664], 13);

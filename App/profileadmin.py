@@ -4,21 +4,54 @@ from PIL import Image
 import io
 import base64
 from App.login import get_session_state
+import boto3
+from botocore.exceptions import NoCredentialsError
+from urllib.parse import urlparse
+import os
+import uuid
 
 def create_connection():
         connection = psycopg2.connect(
-            # host="db.fesgpwzjkedykiwpmatt.supabase.co",
-            # database="postgres",
-            # user="postgres",
-            # password="17agustus2023",
-            # port='5432'
-            host="170.64.133.197",
+            host="localhost",
             database="postgres",
             user="postgres",
             password="admin",
             port='5432'
         )
         return connection
+
+
+# Function to delete file to DigitalOcean Spaces
+def delete_from_digitalocean_space(space_name, space_file_name):
+    # Konfigurasi akun DigitalOcean Spaces
+    s3 = boto3.client('s3', endpoint_url='https://sgp1.digitaloceanspaces.com',
+                    aws_access_key_id='DO00ATNNKV4K77MB29DB', aws_secret_access_key='WeVAgMDRhl2QWxw2cErT+/hPsgf4JzZNRjEXVF7xqnQ')
+
+    try:
+        # Delete the file from the Space
+        s3.delete_object(Bucket=space_name, Key=f"fotoprofile/{space_file_name}")
+
+        print("File berhasil dihapus dari DigitalOcean Spaces!")
+        return True
+    except NoCredentialsError:
+        print("Tidak ditemukan kredensial yang valid. Pastikan Anda telah mengatur do_access_key_id dan do_secret_access_key.")
+        return False
+
+# Function to upload file to DigitalOcean Spaces
+def upload_to_digitalocean_space(file_data, space_name, space_file_name):
+   # Konfigurasi akun DigitalOcean Spaces
+    s3 = boto3.client('s3', endpoint_url='https://sgp1.digitaloceanspaces.com',
+                    aws_access_key_id='DO00ATNNKV4K77MB29DB', aws_secret_access_key='WeVAgMDRhl2QWxw2cErT+/hPsgf4JzZNRjEXVF7xqnQ')
+
+    try:
+        # Upload the file to the Space in the "data/image" folder
+        s3.upload_fileobj(file_data, space_name, f"fotoprofile/{space_file_name}", ExtraArgs={'ACL': 'public-read'})
+
+        print("File berhasil diunggah!")
+        return True
+    except NoCredentialsError:
+        print("Tidak ditemukan kredensial yang valid. Pastikan Anda telah mengatur do_access_key_id dan do_secret_access_key.")
+        return False
 
 def app():
     st.title("Profile Admin")
@@ -79,19 +112,55 @@ def app():
                 conn.commit()
                 st.success("Profile updated successfully!")
 
-        new_image = st.file_uploader(f"Update Profile Picture", type=["png", "jpg"])
+               # Set up Streamlit app
+        st.title("Update Profile Picture")
 
+        # Input for uploading a new profile picture
+        new_image = st.file_uploader("Upload New Profile Picture", type=["png", "jpg"])
+
+        # Update button
         if new_image is not None:
-            # Read the image data
-            # Allow the user to upload a new image
-            image_data = new_image.read()
+            image_extension = new_image.name.split(".")[-1].lower()  # Extract the last part of the name after the dot
 
-            # Update the image in the database using SQL UPDATE statement
-            cursor.execute("UPDATE users SET profile_picture = %s WHERE  id = %s", (psycopg2.Binary(image_data), session_state.session_data['user_id_login'],))
-            conn.commit()
+            if st.button("Update Profile Picture"):
+                # Example usage
+                conn = create_connection()
+                cursor = conn.cursor()
+                cursor.execute("SELECT profile_picture FROM users WHERE id = %s", (session_state.session_data['user_id_login'],))
+                name_delete = cursor.fetchone()
+                conn.commit()
+                cursor.close()
+                conn.close()
 
-            # Show a success message
-            st.success("Image updated successfully!")
+                if name_delete is not None:
+                    space_name = 'tugasakhir'
+                    space_file_name_to_delete = name_delete[0]  # Nama file yang ingin dihapus
+                    parsed_url = urlparse(space_file_name_to_delete)
+                    file_name = os.path.basename(parsed_url.path)
+                    print(file_name)
+                    
+                    # Memanggil fungsi untuk menghapus file dari DigitalOcean Spaces
+                    delete_from_digitalocean_space(space_name, file_name)
+                
+                # Generate a unique ID
+                generated_id = str(uuid.uuid4())
+
+                image_name =  f"{session_state.session_data['user_id_login']}{generated_id }.{image_extension}"
+                # Upload the new image to DigitalOcean Spaces
+                space_name = 'tugasakhir'
+
+                if upload_to_digitalocean_space(new_image, space_name, image_name):
+                    # Update the image in the database using SQL UPDATE statement
+                    full_url = f"https://tugasakhir.sgp1.cdn.digitaloceanspaces.com/fotoprofile/{image_name}"
+                    conn = create_connection()
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE users SET profile_picture = %s WHERE id = %s", (full_url, session_state.session_data['user_id_login'],))
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+
+                    # Show a success message
+                    st.success("Profile picture updated successfully!")   
      
     with st.container():
         st.write("---")
@@ -107,21 +176,56 @@ def app():
         data = cursor.fetchall()
            
         for row in data:
-            st.write('---')
+            st.write('---')           
+
             # Allow the user to upload a new image
-            new_image = st.file_uploader(f"Update Image for ID {row[0]} upload", type=["png", "jpg"])
+            new_image = st.file_uploader(f"Update Image for ID {row[0]}", type=["png", "jpg"])
 
             if new_image is not None:
-                # Read the image data
-                image_data = new_image.read()
+                image_extension = new_image.name.split(".")[-1].lower()  # Extract the last part of the name after the dot
 
-                # Update the image in the database using SQL UPDATE statement
-                id_to_update = row[0]
-                cursor.execute("UPDATE spasial_input_user SET image_data = %s WHERE id_kelas_tutupan_lahan = %s", (psycopg2.Binary(image_data), id_to_update))
-                conn.commit()
+                if st.button("Update Foto Training Site"):
+                    # Example usage
+                    # Update the image in the database using SQL UPDATE statement
+                    id_to_update = row[0]
+                    conn = create_connection()
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT image_data FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s", (id_to_update,))
+                    name_delete = cursor.fetchone()
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
 
-                # Show a success message
-                st.success("Image updated successfully!")
+                    if name_delete is not None:
+                        space_name = 'tugasakhir'
+                        space_file_name_to_delete = name_delete[0]  # Nama file yang ingin dihapus
+                        parsed_url = urlparse(space_file_name_to_delete)
+                        file_name = os.path.basename(parsed_url.path)
+                        print(file_name)
+                        
+                        # Memanggil fungsi untuk menghapus file dari DigitalOcean Spaces
+                        delete_from_digitalocean_space_dts(space_name, file_name)
+                    
+                    # Generate a unique ID
+                    generated_id = str(uuid.uuid4())
+
+                    image_name =  f"{id_to_update}{generated_id }.{image_extension}"
+                    print(image_name)
+                    # Upload the new image to DigitalOcean Spaces
+                    space_name = 'tugasakhir'
+
+                    if upload_to_digitalocean_space_dts(new_image, space_name, image_name):
+                        # Update the image in the database using SQL UPDATE statement
+                        full_url = f"https://tugasakhir.sgp1.cdn.digitaloceanspaces.com/trainingsiteimage/{image_name}"
+                        conn = create_connection()
+                        cursor = conn.cursor()
+                        cursor.execute("UPDATE spasial_input_user SET  image_data  = %s WHERE id_kelas_tutupan_lahan = %s", (full_url, id_to_update,))
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+
+                        # Show a success message
+                        st.success("Profile picture updated successfully!") 
                
 
 
@@ -141,9 +245,11 @@ def app():
 
             with col5:
                 if row[8] is not None and len(row[8]) > 0:
-                    image_bytes = io.BytesIO(row[8])
-                    image = Image.open(image_bytes)
-                    st.image(image, use_column_width=True)
+                    # URL gambar
+                    url_gambar = row[8]
+
+                    # Menampilkan gambar
+                    st.image(url_gambar, caption= row[2], use_column_width=True)
                 else:
                     st.write("No image available")
             
@@ -199,7 +305,7 @@ def app():
         cursor = conn.cursor()
 
         # Execute a query to retrieve the data
-        cursor.execute("SELECT id_kelas_tutupan_lahan, id_users, kelas_tutupan_lahan, latitude, longitude, geom,location,date,image_data, admin_note FROM spasial_input_user")
+        cursor.execute("SELECT id_kelas_tutupan_lahan, id_users, kelas_tutupan_lahan, latitude, longitude, geom, location, date, image_data, admin_note FROM spasial_input_user")
 
         # Fetch all the rows returned by the query
         data = cursor.fetchall()
@@ -223,13 +329,15 @@ def app():
             with col4:
                 st.write("Date:", row[7])
             # Check for null or empty image value
-            if row[8] is not None and len(row[8]) > 0:
-                # Convert bytea to PIL Image
-                image_bytes = io.BytesIO(row[8])
-                image = Image.open(image_bytes)
-                col5.image(image, use_column_width=True)
-            else:
-                col5.write("No image available")
+            with col5:
+                if row[8] is not None and len(row[8]) > 0:
+                    # URL gambar
+                    url_gambar = row[8]
+
+                    # Menampilkan gambar
+                    st.image(url_gambar, caption= row[2], use_column_width=True)
+                else:
+                    st.write("No image available")
 
             # If admin, show the "Transfer" button
             transfer_button = col6.button(f"Transfer ID {row[0]}")
@@ -245,7 +353,7 @@ def app():
                 geom GEOMETRY NOT NULL,
                 location VARCHAR NOT NULL,
                 date DATE NOT NULL,
-                image_data BYTEA,
+                image_data VARCHAR,
                 FOREIGN KEY (id_users) REFERENCES users(id)
                 );
                 '''
@@ -273,17 +381,19 @@ def app():
             if not st.session_state.get(f"edit_mode_{row[0]}", False):
                 if st.button(f"Edit ID {row[0]}"):
                     st.session_state[f"edit_mode_{row[0]}"] = True
+                    st.experimental_rerun()  # Rerun the app 
             else:
                 new_latitude = st.number_input("New Latitude", value=row[3])
                 new_longitude = st.number_input("New Longitude", value=row[4])
                 new_location = st.text_input("New Location", value=row[6])
                 new_date = st.date_input("New Date", value=row[7])
+                new_admin_note =  st.text_input("New Admin Note", value=row[9])
                 
 
                 if st.button(f"Update ID {row[0]}"):
                     # Update the database using SQL UPDATE statement
-                    update_query = "UPDATE spasial_input_user SET latitude = %s, longitude = %s, location = %s, date = %s  WHERE id_kelas_tutupan_lahan = %s;"
-                    cursor.execute(update_query, (new_latitude, new_longitude, new_location, new_date, row[0]))
+                    update_query = "UPDATE spasial_input_user SET latitude = %s, longitude = %s, location = %s, date = %s, admin_note = %s   WHERE id_kelas_tutupan_lahan = %s;"
+                    cursor.execute(update_query, (new_latitude, new_longitude, new_location, new_date, new_admin_note, row[0]))
                     conn.commit()
 
                     st.session_state[f"edit_mode_{row[0]}"] = False

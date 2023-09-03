@@ -3,13 +3,14 @@ import base64
 import psycopg2
 from psycopg2 import Error
 from App.login import get_session_state
+from urllib.request import urlopen
 
-def get_image_from_database():
+def get_image_url_from_database():
     try:
         session_state = get_session_state()
         # Connect to the PostgreSQL database
         connection = psycopg2.connect(
-            host="170.64.133.197",
+            host="localhost",
             database="postgres",
             user="postgres",
             password="admin",
@@ -24,14 +25,14 @@ def get_image_from_database():
         cursor.execute(query, (session_state.session_data['user_id_login'],))
 
         # Fetch the result
-        image_data_tuple = cursor.fetchone()
+        image_url = cursor.fetchone()
 
         # Close the cursor and connection
         cursor.close()
         connection.close()
 
-        if image_data_tuple and len(image_data_tuple) > 0:
-            return image_data_tuple[0]  # Extract the image data from the tuple
+        if  image_url and len(image_url) > 0:
+              return image_url[0]  # Extract the image data from the tuple
         else:
             return None
 
@@ -39,10 +40,7 @@ def get_image_from_database():
         print("Error retrieving image:", e)
         return None
 
-def circle_profile_picture(image_data, container_size=200):
-    # Encode the image to base64
-    profile_picture_base64 = base64.b64encode(image_data).decode()
-
+def circle_profile_picture(image_url, container_size=200):
     # Define the custom CSS
     css = f"""
     <style>
@@ -68,7 +66,7 @@ def circle_profile_picture(image_data, container_size=200):
     # Display the circular profile picture using custom HTML and CSS
     html_code = f"""
     <div class="circle-container">
-        <img class="circle-image" src="data:image/jpeg;base64,{profile_picture_base64}" alt="Profile Picture">
+        <img class="circle-image" src="{image_url}" alt="Profile Picture">
     </div>
     """
 
@@ -77,22 +75,18 @@ def circle_profile_picture(image_data, container_size=200):
 
 # Example usage
 def profile_circle():
-    # Retrieve the image data from the database
-    profile_picture_data = get_image_from_database()
+    # Retrieve the image URL from the database
+    profile_picture_url = get_image_url_from_database()
 
-    # Display the circular profile picture using the retrieved data
-    if profile_picture_data:
-        circle_profile_picture(profile_picture_data, container_size=150)
+    # Display the circular profile picture using the retrieved URL
+    if profile_picture_url:
+        circle_profile_picture(profile_picture_url, container_size=150)
     else:
         st.sidebar.write("No profile picture available.")
 
     # Your other Streamlit content goes here
     st.sidebar.write("Welcome to my app!")
     st.sidebar.write("Feel free to add more content.")
-
-
-
-
 
 
 

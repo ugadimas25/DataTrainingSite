@@ -51,13 +51,7 @@ def generate_id(kelas_tutupan_lahan):
 
 def create_connection():
         connection = psycopg2.connect(
-            # host="db.fesgpwzjkedykiwpmatt.supabase.co",
-            # database="postgres",
-            # user="postgres",
-            # password="17agustus2023",
-            # port='5432',
-
-            host="170.64.133.197",
+            host="localhost",
             database="postgres",
             user="postgres",
             password="admin",
@@ -120,7 +114,7 @@ def input_upload():
         geom GEOMETRY NOT NULL,
         location VARCHAR NOT NULL,
         date DATE NOT NULL,
-        image_data BYTEA,
+        image_data VARCHAR,
         admin_note TEXT,
         FOREIGN KEY (id_users) REFERENCES users(id)
         );
@@ -201,7 +195,7 @@ def import_excel_to_postgres(excel_file):
     geom GEOMETRY NOT NULL,
     location VARCHAR NOT NULL,
     date DATE NOT NULL,
-    image_data BYTEA,
+    image_data VARCHAR,
     admin_note TEXT,
     FOREIGN KEY (id_users) REFERENCES users(id)
     );

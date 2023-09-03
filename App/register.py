@@ -58,12 +58,7 @@ province_indonesia ={
 
 def create_connection():
         connection = psycopg2.connect(
-            # host="db.fesgpwzjkedykiwpmatt.supabase.co",
-            # database="postgres",
-            # user="postgres",
-            # password="17agustus2023",
-            # port='5432'
-            host="170.64.133.197",
+            host="localhost",
             database="postgres",
             user="postgres",
             password="admin",
@@ -215,7 +210,7 @@ def register1():
                 address TEXT NOT NULL,
                 cellphone VARCHAR(20) NOT NULL,
                 status VARCHAR(10) NOT NULL,
-                profile_picture BYTEA
+                profile_picture VARCHAR
             );
             '''
             cursor.execute(create_table_query)

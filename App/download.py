@@ -18,20 +18,15 @@ import shutil
 
 
 def create_connection():
-        connection = psycopg2.connect(
-            # host="db.fesgpwzjkedykiwpmatt.supabase.co",
-            # database="postgres",
-            # user="postgres",
-            # password="17agustus2023",
-            # port='5432',
+    connection = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="postgres",
+        password="admin",
+        port='5432'
+    )
+    return connection
 
-            host="170.64.133.197",
-            database="postgres",
-            user="postgres",
-            password="admin",
-            port='5432'
-        )
-        return connection
 
 def Download_Excel():
     ewkb_hex_data = st.session_state.user_data_ewkb[0]
