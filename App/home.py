@@ -28,7 +28,7 @@ def app():
         st.markdown(f'<style>{extracted_styles}</style>',unsafe_allow_html=True)
             
 
-    st.Header("Welcome To Training Site Data Repository!!!")
+    st.title("Welcome To Training Site Data Repository!!!")
     
     #Find more emoji here: https://www.webfx.com/tools/emoji-cheat-sheet/
     # st.set_page_config(page_title="My Webpage", page_icon=":tada", layout="wide")
