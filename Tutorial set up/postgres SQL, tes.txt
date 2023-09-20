@@ -1,0 +1,14 @@
+INSERT INTO users (id, username, first_name, last_name, password, birthday, gender, email, country, province, city_regency, district, subdistrict, address, cellphone, status)
+VALUES 
+(1, 'john_doe', 'John', 'Doe', 'hashed_password', '1990-01-15', 'Male', 'john@example.com', 'USA', 'New York', 'New York City', 'Manhattan', 'Downtown', '123 Main St', '123-456-7890', 'Active');
+
+
+SELECT COUNT(*)
+FROM spasial_input_user
+WHERE latitude = 123.456 -- Ganti dengan nilai latitude yang diinginkan
+  AND longitude = 789.012 -- Ganti dengan nilai longitude yang diinginkan
+  AND date = '2023-09-15' -- Ganti dengan nilai tanggal yang diinginkan
+
+UPDATE spasial_input_user SET latitude = %s, longitude = %s, location = %s, date = %s  WHERE id_kelas_tutupan_lahan = %s;
+
+DELETE FROM spasial_input_user WHERE id_kelas_tutupan_lahan = %s;

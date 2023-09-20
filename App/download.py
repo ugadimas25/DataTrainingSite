@@ -97,7 +97,6 @@ def Download_CSV():
     st.markdown(href, unsafe_allow_html=True)
 
 
-
 def Download_Shapefile():
     ewkb_hex_data = st.session_state.user_data_ewkb[0]
     ewkb_binary_data = bytes.fromhex(ewkb_hex_data)
@@ -109,7 +108,7 @@ def Download_Shapefile():
 
     # Perform the spatial query
     sql_query = """
-        SELECT *
+        SELECT id_kelas_tutupan_lahan, id_users, kelas_tutupan_lahan, latitude, longitude, geom, location, date, image_data
         FROM spasial_data_training_site
         WHERE ST_Intersects(geom, ST_GeomFromEWKB(%s))
         AND date BETWEEN %s AND %s
@@ -121,31 +120,56 @@ def Download_Shapefile():
 
     cursor.close()
     conn.close()
+
     print(results)
     jumlah_data = len(results)
     print("Jumlah baris data:", jumlah_data)
-    
+
     geometries = []  # Initialize the list to store geometries
-    
+    attributes = []  # Initialize the list to store attributes
+
     for row in results:
         geometry_data = row[5]  # Change to the appropriate index for geometry column
         geometry = wkb.loads(bytes.fromhex(geometry_data))
         geometries.append(geometry)
-    
-    # Create GeoDataFrame from geometry objects
-    gdf = gpd.GeoDataFrame({'geometry': geometries})
-    
+
+        # Extract attributes
+        id_kelas_tutupan_lahan, id_users, kelas_tutupan_lahan, latitude, longitude, _, location, date, image_data = row
+        attributes.append({
+            'id_kelas_tutupan_lahan': id_kelas_tutupan_lahan,
+            'id_users': id_users,
+            'kelas_tutupan_lahan': kelas_tutupan_lahan,
+            'latitude': latitude,
+            'longitude': longitude,
+            'geom':geometry,
+            'location': location,
+            'date': date,
+            'image_data': image_data
+        })
+
+    # Create GeoDataFrame from geometry objects and attributes
+    gdf = gpd.GeoDataFrame(attributes, geometry=geometries)
+
+    # Convert Point geometries to separate latitude and longitude fields
+    gdf['latitude'] = gdf['geom'].apply(lambda geom: geom.y)
+    gdf['longitude'] = gdf['geom'].apply(lambda geom: geom.x)
+
+    # Convert the "date" column to a string in the desired format
+    gdf['date'] = gdf['date'].apply(lambda x: x.strftime('%Y-%m-%d'))
+
+    # Create GeoDataFrame with only the necessary columns
+    gdf = gdf[['id_kelas_tutupan_lahan', 'id_users', 'kelas_tutupan_lahan', 'latitude', 'longitude', 'location', 'date', 'image_data', 'geometry']]
+
     # Display the GeoDataFrame as a table
     st.write("GeoDataFrame:")
     st.write(gdf)
 
-  
     # Create a temporary directory to store Shapefile components
     temp_dir = tempfile.mkdtemp()
     shapefile_path = os.path.join(temp_dir, 'shapefile')
     os.makedirs(shapefile_path)
 
-    # Save the GeoDataFrame as a Shapefile
+    # Save the GeoDataFrame as a Shapefile with the correct field type
     gdf.to_file(shapefile_path, driver='ESRI Shapefile')
 
     # Create a ZipFile containing the Shapefile components
@@ -163,3 +187,155 @@ def Download_Shapefile():
 
     # Clean up temporary files
     shutil.rmtree(temp_dir)
+
+# def Download_Shapefile():
+#     ewkb_hex_data = st.session_state.user_data_ewkb[0]
+#     ewkb_binary_data = bytes.fromhex(ewkb_hex_data)
+#     startDate = st.session_state.user_data_ewkb[1]
+#     endDate = st.session_state.user_data_ewkb[2]
+
+#     conn = create_connection()
+#     cursor = conn.cursor()
+
+#     # Perform the spatial query
+#     sql_query = """
+#         SELECT *
+#         FROM spasial_data_training_site
+#         WHERE ST_Intersects(geom, ST_GeomFromEWKB(%s))
+#         AND date BETWEEN %s AND %s
+#     """
+
+#     cursor.execute(sql_query, [psycopg2.Binary(ewkb_binary_data), startDate, endDate])
+
+#     results = cursor.fetchall()
+
+#     cursor.close()
+#     conn.close()
+#     print(results)
+#     jumlah_data = len(results)
+#     print("Jumlah baris data:", jumlah_data)
+    
+#     geometries = []  # Initialize the list to store geometries
+    
+#     for row in results:
+#         geometry_data = row[5]  # Change to the appropriate index for geometry column
+#         geometry = wkb.loads(bytes.fromhex(geometry_data))
+#         geometries.append(geometry)
+    
+#     # Create GeoDataFrame from geometry objects
+#     gdf = gpd.GeoDataFrame({'geometry': geometries})
+    
+#     # Display the GeoDataFrame as a table
+#     st.write("GeoDataFrame:")
+#     st.write(gdf)
+
+  
+#     # Create a temporary directory to store Shapefile components
+#     temp_dir = tempfile.mkdtemp()
+#     shapefile_path = os.path.join(temp_dir, 'shapefile')
+#     os.makedirs(shapefile_path)
+
+#     # Save the GeoDataFrame as a Shapefile
+#     gdf.to_file(shapefile_path, driver='ESRI Shapefile')
+
+#     # Create a ZipFile containing the Shapefile components
+#     zip_file_path = os.path.join(temp_dir, 'shapefile.zip')
+#     with ZipFile(zip_file_path, 'w') as zipf:
+#         for file_name in os.listdir(shapefile_path):
+#             file_path = os.path.join(shapefile_path, file_name)
+#             zipf.write(file_path, os.path.basename(file_path))
+
+#     # Offer the user a downloadable link for the Zip file
+#     with open(zip_file_path, 'rb') as zip_file:
+#         b64 = base64.b64encode(zip_file.read()).decode()
+#         href = f'<a href="data:application/zip;base64,{b64}" download="shapefile.zip">Download Shapefile</a>'
+#         st.markdown(href, unsafe_allow_html=True)
+
+#     # Clean up temporary files
+#     shutil.rmtree(temp_dir)
+
+# def Download_Shapefile():
+#     ewkb_hex_data = st.session_state.user_data_ewkb[0]
+#     ewkb_binary_data = bytes.fromhex(ewkb_hex_data)
+#     startDate = st.session_state.user_data_ewkb[1]
+#     endDate = st.session_state.user_data_ewkb[2]
+
+#     conn = create_connection()
+#     cursor = conn.cursor()
+
+#     # Perform the spatial query
+#     sql_query = """
+#         SELECT id_kelas_tutupan_lahan, id_users, kelas_tutupan_lahan, latitude, longitude, geom, location, date, image_data
+#         FROM spasial_data_training_site
+#         WHERE ST_Intersects(geom, ST_GeomFromEWKB(%s))
+#         AND date BETWEEN %s AND %s
+#     """
+
+#     cursor.execute(sql_query, [psycopg2.Binary(ewkb_binary_data), startDate, endDate])
+
+#     results = cursor.fetchall()
+
+#     cursor.close()
+#     conn.close()
+    
+#     print(results)
+#     jumlah_data = len(results)
+#     print("Jumlah baris data:", jumlah_data)
+    
+#     geometries = []  # Initialize the list to store geometries
+#     attributes = []  # Initialize the list to store attributes
+    
+#     for row in results:
+#         geometry_data = row[5]  # Change to the appropriate index for geometry column
+#         geometry = wkb.loads(bytes.fromhex(geometry_data))
+#         geometries.append(geometry)
+        
+#         # Extract attributes
+#         id_kelas_tutupan_lahan, id_users, kelas_tutupan_lahan, latitude, longitude, _, location, date, image_data = row
+#         attributes.append({
+#             'id_kelas_tutupan_lahan': id_kelas_tutupan_lahan,
+#             'id_users': id_users,
+#             'kelas_tutupan_lahan': kelas_tutupan_lahan,
+#             'latitude': latitude,
+#             'longitude': longitude,
+#             'geom': geometry,
+#             'location': location,
+#             'date': date,
+#             'image_data': image_data
+#         })
+    
+#     # Create GeoDataFrame from geometry objects and attributes
+#     gdf = gpd.GeoDataFrame(attributes, geometry=geometries)
+    
+#     # Display the GeoDataFrame as a table
+#     st.write("GeoDataFrame:")
+#     st.write(gdf)
+
+#     # Create a temporary directory to store Shapefile components
+#     temp_dir = tempfile.mkdtemp()
+#     shapefile_path = os.path.join(temp_dir, 'shapefile')
+#     os.makedirs(shapefile_path)
+
+#     # Save the GeoDataFrame as a Shapefile with the correct field type
+#     gdf.to_file(shapefile_path, driver='ESRI Shapefile', dtype={'geom': 'Point'})
+
+
+#     # # Save the GeoDataFrame as a Shapefile
+#     # gdf.to_file(shapefile_path, driver='ESRI Shapefile')
+
+#     # Create a ZipFile containing the Shapefile components
+#     zip_file_path = os.path.join(temp_dir, 'shapefile.zip')
+#     with ZipFile(zip_file_path, 'w') as zipf:
+#         for file_name in os.listdir(shapefile_path):
+#             file_path = os.path.join(shapefile_path, file_name)
+#             zipf.write(file_path, os.path.basename(file_path))
+
+#     # Offer the user a downloadable link for the Zip file
+#     with open(zip_file_path, 'rb') as zip_file:
+#         b64 = base64.b64encode(zip_file.read()).decode()
+#         href = f'<a href="data:application/zip;base64,{b64}" download="shapefile.zip">Download Shapefile</a>'
+#         st.markdown(href, unsafe_allow_html=True)
+
+#     # Clean up temporary files
+#     shutil.rmtree(temp_dir)
+
